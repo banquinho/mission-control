@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" status)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" log --oneline -5)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" add src/types/models.ts src/lib/mock-data.ts src/app/api/models/route.ts src/app/models/page.tsx src/components/models/provider-cards.tsx src/components/models/model-breakdown-table.tsx src/components/models/usage-log.tsx src/components/models/endpoint-stats.tsx src/components/layout/sidebar.tsx)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" commit -m \"$\\(cat <<''EOF''\nAdd Model Usage monitoring page with mock data\n\nIntroduces a /models page to track LLM API usage across providers,\nper-model breakdowns, recent call logs, and API endpoint stats.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" push origin master)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" remote -v)",
+      "Bash(gh repo create:*)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" push origin main)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" branch -a)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" branch:*)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" push -u origin main)",
+      "Bash(gh repo edit:*)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" checkout main)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" branch -d master)",
+      "Bash(git -C \"C:\\\\Users\\\\banqu\\\\VibeCoding\\\\mission-control\" push origin --delete master)",
+      "Bash(curl:*)",
+      "Bash(npx playwright:*)",
+      "WebFetch(domain:vercel.com)",
+      "WebSearch",
+      "Bash(node -e:*)",
+      "Bash(npx:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

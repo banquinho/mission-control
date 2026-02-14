@@ -1,4 +1,3 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { ProviderSummary } from "@/types/models";
 
@@ -12,11 +11,9 @@ export function ModelBreakdownTable({
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Model Breakdown</CardTitle>
-      </CardHeader>
-      <div className="overflow-x-auto">
+    <div>
+      <h2 className="text-sm font-medium text-zinc-100">Model Breakdown</h2>
+      <div className="mt-4 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
@@ -49,6 +46,6 @@ export function ModelBreakdownTable({
           </tbody>
         </table>
       </div>
-    </Card>
+    </div>
   );
 }

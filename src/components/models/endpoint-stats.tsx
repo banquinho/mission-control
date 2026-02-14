@@ -1,14 +1,11 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { relativeTime } from "@/lib/utils";
 import type { EndpointUsage } from "@/types/models";
 
 export function EndpointStats({ endpoints }: { endpoints: EndpointUsage[] }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>API Endpoint Usage</CardTitle>
-      </CardHeader>
-      <div className="overflow-x-auto">
+    <div>
+      <h2 className="text-sm font-medium text-zinc-100">API Endpoint Usage</h2>
+      <div className="mt-4 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
@@ -50,6 +47,6 @@ export function EndpointStats({ endpoints }: { endpoints: EndpointUsage[] }) {
           </tbody>
         </table>
       </div>
-    </Card>
+    </div>
   );
 }

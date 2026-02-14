@@ -10,11 +10,25 @@ import {
 
 export default function ModelsPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-bold text-zinc-100">Model Usage</h1>
-      <ProviderCards providers={mockProviderSummaries} />
+    <div>
+      <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">
+        Model Usage
+      </h1>
+      <p className="mt-1 text-sm text-zinc-500">
+        LLM provider metrics and API endpoint stats.
+      </p>
+
+      <div className="mt-8">
+        <ProviderCards providers={mockProviderSummaries} />
+      </div>
+
+      <hr className="my-8 border-zinc-800" />
+
       <ModelBreakdownTable providers={mockProviderSummaries} />
-      <div className="grid gap-6 lg:grid-cols-2">
+
+      <hr className="my-8 border-zinc-800" />
+
+      <div className="grid gap-8 lg:grid-cols-2">
         <UsageLog records={mockModelUsage} />
         <EndpointStats endpoints={mockEndpointUsage} />
       </div>

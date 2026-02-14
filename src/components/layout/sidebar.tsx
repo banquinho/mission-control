@@ -11,6 +11,7 @@ const navItems = [
   { href: "/mailbox", label: "Mailbox", icon: "✉" },
   { href: "/datasources", label: "Data Sources", icon: "⬡" },
   { href: "/models", label: "Models", icon: "◆" },
+  { href: "/settings", label: "Settings", icon: "⚙" },
 ];
 
 export function Sidebar() {

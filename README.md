@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mission Control
+
+Control plane UI for the OpenClaw runtime. Mission Control schedules, monitors, and displays results — OpenClaw executes.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Live Mode vs Mock Mode
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Mission Control operates in one of two modes:
 
-## Learn More
+### Mock Mode (default)
 
-To learn more about Next.js, take a look at the following resources:
+When `OPENCLAW_SSH_HOST` is **not set**, the app serves hardcoded sample data. No SSH connection is made. This is the default for local development.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Live Mode
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+When `OPENCLAW_SSH_HOST` is set, all API routes proxy commands to the OpenClaw runtime over SSH.
 
-## Deploy on Vercel
+#### Required Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create `.env.local` (see `.env.local.example`):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+# Required — user@host of your OpenClaw VM
+OPENCLAW_SSH_HOST=azureuser@vm-openclaw
+
+# Optional — defaults shown
+OPENCLAW_SSH_PORT=22
+OPENCLAW_SSH_IDENTITY_FILE=~/.ssh/id_openclaw
+OPENCLAW_SSH_OPTS=
+OPENCLAW_TIMEOUT_MS=30000
+```
+
+#### Testing Connectivity
+
+Once configured, hit the health endpoint:
+
+```bash
+# Use cached status (30s TTL)
+curl http://localhost:3000/api/health/openclaw
+
+# Force a fresh probe
+curl http://localhost:3000/api/health/openclaw?refresh=1
+```
+
+Response:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "mode": "live",
+    "connected": true,
+    "latencyMs": 245,
+    "lastChecked": "2026-02-12T12:00:00.000Z",
+    "config": {
+      "mode": "live",
+      "host": "***@vm-openclaw",
+      "port": "22",
+      "identityFile": "(set)",
+      "timeoutMs": "30000"
+    }
+  }
+}
+```
+
+#### Troubleshooting
+
+| Symptom | Check |
+|---------|-------|
+| `OPENCLAW_CONNECTION_FAILED` (503) | SSH key auth failing — verify `ssh azureuser@vm-openclaw` works manually |
+| `OPENCLAW_TIMEOUT` (504) | VM unreachable or OpenClaw CLI hanging — check network / firewall |
+| `OPENCLAW_INVALID_RESPONSE` (502) | OpenClaw CLI returned non-JSON — check `openclaw` is installed on the VM |
+| `OPENCLAW_SSH_ERROR` (502) | Remote command failed — check OpenClaw logs on the VM |
+| All routes return mock data | `OPENCLAW_SSH_HOST` is not set in `.env.local` |
+
+#### Error Codes
+
+All API errors follow a consistent format:
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "OPENCLAW_CONNECTION_FAILED",
+    "message": "Human-readable description (secrets redacted)"
+  }
+}
+```
+
+#### Connection Caching
+
+To avoid SSH overhead on every request, connection status is cached in-memory for 30 seconds. When the cache reports `disconnected`, API routes return `503` immediately without attempting SSH. The cache auto-expires, or you can force-refresh via the health endpoint.
+
+#### Architecture
+
+```
+Browser  →  Next.js API Routes  →  SSH  →  OpenClaw VM
+                ↕
+          src/lib/openclaw.ts    (single integration point)
+          src/lib/live-mode.ts   (mode detection + connection cache)
+          src/lib/config.ts      (env parsing + validation)
+```
+
+The browser never talks to OpenClaw directly. All interaction is server-side only through `src/lib/openclaw.ts`.
